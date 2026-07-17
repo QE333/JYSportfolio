@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<!-- saved from url=(0151)file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floema® — Spaces for people, made for life.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./Floema® — Spaces for people, made for life._files/css2" rel="stylesheet">
+<script src="./Floema® — Spaces for people, made for life._files/gsap.min.js.下载"></script>
+<script src="./Floema® — Spaces for people, made for life._files/ScrollTrigger.min.js.下载"></script>
+<script src="./Floema® — Spaces for people, made for life._files/ogl.umd.js.下载"></script>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #F4EFD7;
+  --bg-warm: #EBE7DF;
+  --bg-lighter: #F9F8F6;
+  --text: #241F21;
+  --text-secondary: #524945;
+  --text-tertiary: #7A716D;
+  --text-muted: #988F8B;
+  --green: #042D2B;
+  --green-light: #BACFA3;
+  --gold: #C6AF88;
+  --coral: #F76C46;
+  --yellow: #E9E778;
+  --border: #D2CDC4;
+  --border-light: #E4DED3;
+  --transition-slow: 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-medium: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-fast: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Bright card accent colors */
+  --card-1: #E8D5B7;
+  --card-2: #D4E5C8;
+  --card-3: #C8D8EB;
+  --card-4: #C5E0D5;
+  --card-5: #E8D0CB;
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+body.loading { overflow: hidden; }
+
+/* ── Cursor ───────────────────────────────── */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--coral);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, background 0.3s, opacity 0.3s;
+  opacity: 0.6;
+}
+.cursor.hover {
+  width: 44px; height: 44px;
+  background: transparent;
+  border: 2px solid var(--green);
+  opacity: 1;
+}
+.cursor.hidden { opacity: 0; }
+
+/* ── Canvas ──────────────────────────────── */
+#particle-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 1;
+}
+
+/* ── OGL Particles Container ────────────── */
+.particles-container {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+.particles-container canvas {
+  display: block;
+  opacity: 0.7;
+}
+
+/* ── Page transition ────────────────────── */
+.page-transition {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--green);
+  z-index: 9998;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+/* ── Loader ──────────────────────────────── */
+.loader {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.loader.hidden { opacity: 0; visibility: hidden; }
+.loader__icon { width: 56px; height: 56px; }
+.loader__icon svg { width: 100%; height: 100%; animation: loaderPulse 2s ease-in-out infinite; }
+@keyframes loaderPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.85); opacity: 0.5; }
+}
+
+/* ── Header ──────────────────────────────── */
+.header {
+  position: fixed; top: 0; left: 0;
+  width: 100%; z-index: 100;
+  padding: 32px 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.4s ease, padding 0.4s ease;
+}
+.header.scrolled {
+  background: rgba(244, 239, 215, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 18px 56px;
+}
+.header__logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: var(--text);
+  text-decoration: none;
+  z-index: 101;
+}
+.header__logo sup {
+  font-size: 0.58rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  vertical-align: super;
+  color: var(--coral);
+}
+.header__nav { display: flex; gap: 44px; align-items: center; }
+.header__nav a {
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+.header__nav a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: var(--green);
+  transition: width 0.3s;
+}
+.header__nav a:hover { color: var(--text); }
+.header__nav a:hover::after { width: 100%; }
+.header__lang {
+  font-size: 0.78rem; color: var(--text-muted);
+  font-weight: 500; letter-spacing: 0.06em;
+  cursor: pointer; transition: color 0.3s;
+}
+.header__lang:hover { color: var(--text); }
+
+.menu-toggle {
+  display: none; flex-direction: column;
+  gap: 5px; cursor: pointer; z-index: 101; padding: 4px;
+}
+.menu-toggle span {
+  display: block; width: 24px; height: 2px;
+  background: var(--text);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* ── HERO: ScrollStack ──────────────────── */
+.hero-stack {
+  position: relative;
+  width: 100%;
+  padding: 0 56px;
+  z-index: 5;
+  background: linear-gradient(
+    180deg,
+    #FDF8E8 0%,
+    #F9F0D0 15%,
+    #F4EFD7 40%,
+    #F4EFD7 100%
+  );
+}
+
+.hero-stack__viewport {
+  position: relative;
+  width: 100%;
+  min-height: 500vh;
+  z-index: 1;
+}
+
+.hero-stack__track {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-stack__intro {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-stack__eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 24px;
+}
+
+.hero-stack__title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 28px;
+  max-width: 700px;
+}
+.hero-stack__title em {
+  font-style: italic;
+  color: var(--green);
+}
+
+.hero-stack__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 460px;
+}
+
+.hero-stack__scroll-hint {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.hero-stack__scroll-hint span {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.hero-stack__scroll-line {
+  width: 1px; height: 52px;
+  background: var(--text-muted);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0%,100% { transform: scaleY(1); opacity: 0.3; }
+  50% { transform: scaleY(0.25); opacity: 1; }
+}
+
+/* ScrollStack Cards */
+.hero-card {
+  position: sticky;
+  top: 8vh;
+  width: 100%;
+  height: 74vh;
+  min-height: 440px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transform-origin: top center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 8px 48px rgba(36,31,33,0.10), 0 2px 8px rgba(36,31,33,0.04);
+  transition: box-shadow 0.4s ease;
+  z-index: 4;
+}
+
+.hero-card:hover {
+  box-shadow: 0 12px 64px rgba(36,31,33,0.16), 0 4px 12px rgba(36,31,33,0.06);
+}
+
+.hero-card__inner {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.hero-card__visual {
+  position: relative;
+  overflow: hidden;
+}
+.hero-card__visual-img {
+  width: 100%; height: 100%;
+  transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.hero-card:hover .hero-card__visual-img {
+  transform: scale(1.04);
+}
+
+.hero-card__index {
+  position: absolute;
+  top: 32px; left: 32px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 3.2rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1;
+  z-index: 1;
+}
+
+.hero-card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 56px 52px;
+  background: #FDFBF7;
+}
+
+.hero-card__tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+.hero-card__name {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+
+.hero-card__count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+.hero-card__desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 380px;
+  margin-bottom: 28px;
+}
+
+.hero-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  transition: gap 0.3s;
+}
+.hero-card__action:hover { gap: 14px; }
+.hero-card__action-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.3s;
+}
+.hero-card__action:hover .hero-card__action-arrow {
+  transform: translateX(4px);
+}
+
+/* Card 1 — Urban */
+.card-1 .hero-card__visual-img {
+  background: linear-gradient(160deg, #C4B5A5 0%, #D8C8B4 30%, #E8D5B7 60%, #D4C4B0 100%);
+}
+.card-1 .hero-card__tag { background: #B8956A; }
+.card-1 .hero-card__count { color: #B8956A; }
+
+/* Card 2 — Golf */
+.card-2 .hero-card__visual-img {
+  background: linear-gradient(160deg, #A8C898 0%, #C0D8B0 30%, #D4E5C8 60%, #B8D0A8 100%);
+}
+.card-2 .hero-card__tag { background: #7A9E5C; }
+.card-2 .hero-card__count { color: #7A9E5C; }
+
+/* Card 3 — rePlastic */
+.card-3 .hero-card__visual-img {
+  background: linear-gradient(160deg, #98AFC8 0%, #B0C8D8 30%, #C8D8EB 60%, #A8C0D8 100%);
+}
+.card-3 .hero-card__tag { background: #6A8DB5; }
+.card-3 .hero-card__count { color: #6A8DB5; }
+
+/* Card 4 — Nature */
+.card-4 .hero-card__visual-img {
+  background: linear-gradient(160deg, #98C8B8 0%, #B0D8C8 30%, #C5E0D5 60%, #A5D0C0 100%);
+}
+.card-4 .hero-card__tag { background: #5A9E88; }
+.card-4 .hero-card__count { color: #5A9E88; }
+
+/* Card 5 — Details */
+.card-5 .hero-card__visual-img {
+  background: linear-gradient(160deg, #C8A898 0%, #D8B8A8 30%, #E8D0CB 60%, #D0B8A8 100%);
+}
+.card-5 .hero-card__tag { background: #B87A68; }
+.card-5 .hero-card__count { color: #B87A68; }
+
+/* Decorative pattern overlay on card visuals */
+.hero-card__pattern {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.25) 0%, transparent 40%),
+    radial-gradient(circle at 75% 15%, rgba(255,255,255,0.18) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  z-index: 0;
+}
+
+.hero-stack__end {
+  width: 100%; height: 1px;
+}
+
+/* ── Section base ────────────────────────── */
+.section { position: relative; z-index: 2; padding: 120px 56px; }
+.section__inner { max-width: 1280px; margin: 0 auto; }
+.section__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 20px;
+}
+.section__title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  font-weight: 400; line-height: 1.18;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.section__text {
+  font-size: 1rem; color: var(--text-secondary);
+  line-height: 1.8; max-width: 580px;
+}
+
+/* ── Products ────────────────────────────── */
+.products { padding: 80px 56px 140px; background: var(--bg-lighter); }
+.products__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-width: 1280px;
+  margin: 48px auto 0;
+}
+.product-item {
+  position: relative; aspect-ratio: 1;
+  overflow: hidden; background: var(--bg-warm); cursor: pointer;
+}
+.product-item__bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.product-item:hover .product-item__bg { transform: scale(1.06); }
+.product-item__info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 28px;
+  background: linear-gradient(to top, rgba(36,31,33,0.6) 0%, transparent 100%);
+  transform: translateY(10px);
+  opacity: 0;
+  transition: all 0.4s ease;
+  z-index: 2;
+}
+.product-item:hover .product-item__info {
+  transform: translateY(0); opacity: 1;
+}
+.product-item__name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem; color: #fff;
+}
+.product-item__cat {
+  font-size: 0.7rem; color: rgba(255,255,255,0.6);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  font-weight: 500;
+}
+.pb-1 { background: linear-gradient(160deg, #E8D5B7, #D4C4B0); }
+.pb-2 { background: linear-gradient(160deg, #D4E5C8, #C0D8B0); }
+.pb-3 { background: linear-gradient(160deg, #C8D8EB, #B0C8D8); }
+.pb-4 { background: linear-gradient(160deg, #C5E0D5, #B0D8C8); }
+.pb-5 { background: linear-gradient(160deg, #E8D0CB, #D8B8A8); }
+.pb-6 { background: linear-gradient(160deg, #D8C8B4, #C8B8A4); }
+
+/* ── Brand ────────────────────────────────── */
+.brand { padding: 140px 56px; }
+.brand__inner { max-width: 1280px; margin: 0 auto; }
+.brand__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.brand__visual {
+  position: relative; aspect-ratio: 4/5;
+  background: linear-gradient(160deg, #E8D5B7, #D4E5C8, #C8D8EB, #E8D0CB, #C5E0D5);
+  overflow: hidden;
+}
+.brand__visual-inner {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, rgba(255,255,255,0.3) 0%, transparent 55%),
+              radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.2) 0%, transparent 45%);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 9rem;
+  color: rgba(255,255,255,0.4);
+}
+.brand__content .section__title { margin-bottom: 36px; }
+.brand__content p {
+  font-size: 1.05rem; color: var(--text-secondary);
+  line-height: 1.85; margin-bottom: 22px;
+}
+.brand__stats { display: flex; gap: 48px; margin-top: 24px; }
+.brand__stat {
+  font-family: 'DM Serif Display', serif;
+  font-size: 3.2rem; color: var(--green);
+  line-height: 1;
+  display: flex; align-items: baseline; gap: 2px;
+}
+.brand__stat small { font-size: 1.2rem; }
+.brand__stat-label {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+/* ── Sustainability ──────────────────────── */
+.sustainability { padding: 120px 56px 160px; background: var(--bg-warm); }
+.sustainability__inner { max-width: 1280px; margin: 0 auto; text-align: center; }
+.sustainability__inner .section__label { margin-bottom: 24px; }
+.sustainability__inner .section__title { max-width: 680px; margin: 0 auto 44px; }
+.sustainability__inner .section__text { margin: 0 auto 60px; font-size: 1.05rem; text-align: center; }
+.sustainability__blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  text-align: left;
+}
+.sustainability__block {
+  background: var(--bg-lighter);
+  padding: 52px 40px;
+  transition: background 0.4s ease;
+}
+.sustainability__block:hover { background: #F4EFD7; }
+.sustainability__block-icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(4,45,43,0.08);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 28px;
+  font-size: 1.3rem;
+}
+.sustainability__block h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem; font-weight: 400;
+  margin-bottom: 14px; color: var(--text);
+}
+.sustainability__block p {
+  font-size: 0.9rem; color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ── Footer ──────────────────────────────── */
+.footer {
+  padding: 84px 56px 48px;
+  background: var(--green);
+  color: rgba(244,239,215,0.7);
+  position: relative; z-index: 2;
+}
+.footer__inner { max-width: 1280px; margin: 0 auto; }
+.footer__top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 64px;
+  border-bottom: 1px solid rgba(244,239,215,0.12);
+}
+.footer__logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; color: #F4EFD7;
+  margin-bottom: 16px;
+}
+.footer__logo sup {
+  font-size: 0.55rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  vertical-align: super;
+  color: var(--yellow);
+}
+.footer p {
+  font-size: 0.85rem; line-height: 1.8;
+  max-width: 300px; color: rgba(244,239,215,0.55);
+}
+.footer h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244,239,215,0.4);
+  margin-bottom: 22px;
+}
+.footer a {
+  display: block; font-size: 0.9rem;
+  color: rgba(244,239,215,0.6);
+  text-decoration: none; margin-bottom: 10px;
+  transition: color 0.3s;
+}
+.footer a:hover { color: var(--yellow); }
+.footer__bottom {
+  padding-top: 36px;
+  display: flex; justify-content: space-between;
+  font-size: 0.75rem; color: rgba(244,239,215,0.3);
+}
+
+/* ── Nav overlay ─────────────────────────── */
+.nav-overlay {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(244,239,215,0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 99;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.nav-overlay.active { opacity: 1; visibility: visible; }
+.nav-overlay__links {
+  display: flex; flex-direction: column;
+  gap: 28px; text-align: center;
+}
+.nav-overlay__links a {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem; color: var(--text);
+  text-decoration: none; transition: color 0.3s;
+}
+.nav-overlay__links a:hover { color: var(--green); }
+
+/* ── Reveal ───────────────────────────────── */
+.reveal {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 1024px) {
+  .header { padding: 24px 36px; }
+  .header.scrolled { padding: 16px 36px; }
+  .hero-stack { padding: 0 36px; }
+  .hero-card { height: 60vh; min-height: 400px; top: 10vh; }
+  .hero-card__inner { grid-template-columns: 1fr 1fr; }
+  .hero-card__content { padding: 40px 32px; }
+  .hero-card__name { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .section, .products, .brand, .sustainability { padding: 80px 36px; }
+  .brand__grid { grid-template-columns: 1fr; gap: 48px; }
+  .brand__visual { aspect-ratio: 3/2; }
+  .footer__top { grid-template-columns: 1fr 1fr; }
+  .products__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .header { padding: 20px 24px; }
+  .header.scrolled { padding: 14px 24px; }
+  .header__nav, .header__lang { display: none; }
+  .menu-toggle { display: flex; }
+  .hero-stack { padding: 0 24px; }
+  .hero-stack__viewport { min-height: 560vh; }
+  .hero-stack__intro { padding: 0 16px; }
+  .hero-stack__title { font-size: clamp(2rem, 8vw, 3.2rem); }
+  .hero-card { height: 72vh; min-height: 380px; top: 12vh; }
+  .hero-card__inner { grid-template-columns: 1fr; grid-template-rows: 38% 62%; }
+  .hero-card__content { padding: 28px 24px; }
+  .hero-card__index { font-size: 2.2rem; top: 16px; left: 16px; }
+  .hero-card__name { font-size: 1.6rem; }
+  .section, .products, .brand, .sustainability { padding: 64px 24px; }
+  .products__grid { grid-template-columns: 1fr; }
+  .brand__grid { gap: 36px; }
+  .brand__visual { aspect-ratio: 1/1; }
+  .brand__visual-inner { font-size: 5rem; }
+  .brand__stats { gap: 32px; }
+  .footer__top { grid-template-columns: 1fr; gap: 36px; }
+  .footer__bottom { flex-direction: column; gap: 8px; }
+  .sustainability__blocks { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  #particle-canvas { display: none; }
+}
+
+/* ── ScrollFloat ─────────────────────────── */
+.scroll-float {
+  overflow: hidden;
+}
+.scroll-float-text {
+  display: inline-block;
+  line-height: inherit;
+}
+.char {
+  display: inline-block;
+  will-change: opacity, transform;
+}
+</style>
+</head>
+<body class="" style="">
+
+<!-- Loader -->
+<div class="loader hidden">
+  <div class="loader__icon">
+    <svg viewBox="0 0 56 56" fill="none"><path d="M28 4 L42 18 L28 32 L14 18 Z" fill="none" stroke="#042D2B" stroke-width="2"></path><path d="M28 22 L42 36 L28 50 L14 36 Z" fill="none" stroke="#042D2B" stroke-width="2" opacity="0.3"></path></svg>
+  </div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor hidden" id="cursor" style="left: 849px; top: 57px;"></div>
+
+<!-- Particle canvas -->
+<canvas id="particle-canvas" width="1263" height="579"></canvas>
+
+<!-- Page transition -->
+<div class="page-transition"></div>
+
+<!-- Mobile nav -->
+<div class="nav-overlay" id="navOverlay">
+  <div class="nav-overlay__links">
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#products">Products</a>
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#brand">About</a>
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#sustainability">Sustainability</a>
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#contact">Contact</a>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="header scrolled" id="header">
+  <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="header__logo">Floema<sup>®</sup></a>
+  <nav class="header__nav">
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#products">Products</a>
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#brand">About</a>
+    <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#sustainability">Sustainability</a>
+  </nav>
+  <span class="header__lang">EN / PT</span>
+  <div class="menu-toggle" id="menuToggle"><span></span><span></span><span></span></div>
+</header>
+
+<!-- ═══════════ HERO: ScrollStack ═══════════ -->
+<section class="hero-stack" id="hero">
+  <div class="particles-container" id="heroParticles"></div>
+  <div class="hero-stack__viewport">
+    <div class="hero-stack__track">
+
+      <!-- Intro text pinned at top -->
+      <div class="hero-stack__intro" style="opacity: 0; transform: translateY(-40px); pointer-events: none;">
+        <p class="hero-stack__eyebrow">Made for Life</p>
+        <h1 class="hero-stack__title scroll-float" data-float-ease="back.inOut(2)" data-float-stagger="0.03" data-float-start="top bottom-=10%" data-float-end="center center" data-float-duration="1"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">S</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">f</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">,</span><br><span style=""><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">m</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">d</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span></span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">f</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">f</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">.</span></span></h1>
+        <p class="hero-stack__subtitle">Floema designs and produces sustainable urban furniture, signage, and equipment that preserve and enhance natural and urban spaces.</p>
+        <div class="hero-stack__scroll-hint">
+          <span>Explore Collections</span>
+          <div class="hero-stack__scroll-line"></div>
+        </div>
+      </div>
+
+      <!-- Card 1 — Urban -->
+      <div class="hero-card card-1" data-collection="urban" style="transform: translateZ(0px) scale(1); z-index: 1; opacity: 0.8; filter: blur(2px);">
+        <div class="hero-card__inner">
+          <div class="hero-card__visual">
+            <div class="hero-card__visual-img">
+              <div class="hero-card__pattern"></div>
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><rect x="20" y="30" width="80" height="55" rx="4" fill="#B8956A"></rect><rect x="30" y="40" width="20" height="45" rx="2" fill="#FFF" opacity="0.4"></rect><rect x="55" y="40" width="45" height="12" rx="2" fill="#FFF" opacity="0.3"></rect><rect x="55" y="56" width="35" height="12" rx="2" fill="#FFF" opacity="0.2"></rect></svg>
+            </div>
+            <div class="hero-card__index">01</div>
+          </div>
+          <div class="hero-card__content">
+            <span class="hero-card__tag">Urban</span>
+            <h2 class="hero-card__name scroll-float" data-float-ease="power3.out" data-float-stagger="0.02" data-float-start="top bottom-=5%" data-float-end="bottom center" data-float-duration="0.8"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">U</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">b</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">C</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span></span></h2>
+            <div class="hero-card__count">62 Products</div>
+            <p class="hero-card__desc">Benches, tables, and lighting crafted for the rhythm of city life. Durable silhouettes that anchor public squares and streetscapes with quiet authority.</p>
+            <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="hero-card__action">Explore Collection <span class="hero-card__action-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 — Golf -->
+      <div class="hero-card card-2" data-collection="golf" style="transform: translateZ(0px) scale(0.975); z-index: 2; opacity: 0.85; filter: blur(1.5px);">
+        <div class="hero-card__inner">
+          <div class="hero-card__visual">
+            <div class="hero-card__visual-img">
+              <div class="hero-card__pattern"></div>
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><circle cx="60" cy="60" r="35" stroke="#7A9E5C" stroke-width="3"></circle><circle cx="60" cy="60" r="10" fill="#7A9E5C"></circle><line x1="85" y1="30" x2="70" y2="20" stroke="#7A9E5C" stroke-width="3" stroke-linecap="round"></line></svg>
+            </div>
+            <div class="hero-card__index">02</div>
+          </div>
+          <div class="hero-card__content">
+            <span class="hero-card__tag">Golf</span>
+            <h2 class="hero-card__name scroll-float" data-float-ease="power3.out" data-float-stagger="0.02" data-float-start="top bottom-=5%" data-float-end="bottom center" data-float-duration="0.8"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">G</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">f</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">C</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span></span></h2>
+            <div class="hero-card__count">28 Products</div>
+            <p class="hero-card__desc">Elegance meets precision on the green. Course furnishings that respect the landscape while elevating the player's experience at every hole.</p>
+            <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="hero-card__action">Explore Collection <span class="hero-card__action-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 — rePlastic -->
+      <div class="hero-card card-3" data-collection="replastic" style="transform: translateZ(0px) scale(0.95); z-index: 3; opacity: 0.9; filter: blur(1px);">
+        <div class="hero-card__inner">
+          <div class="hero-card__visual">
+            <div class="hero-card__visual-img">
+              <div class="hero-card__pattern"></div>
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><path d="M30 90 L30 30 L60 15 L90 30 L90 90 L60 105 Z" fill="none" stroke="#6A8DB5" stroke-width="3"></path><path d="M45 75 L45 45 L60 35 L75 45 L75 75 L60 85 Z" fill="none" stroke="#6A8DB5" stroke-width="2"></path></svg>
+            </div>
+            <div class="hero-card__index">03</div>
+          </div>
+          <div class="hero-card__content">
+            <span class="hero-card__tag">rePlastic</span>
+            <h2 class="hero-card__name scroll-float" data-float-ease="power3.out" data-float-stagger="0.02" data-float-start="top bottom-=5%" data-float-end="bottom center" data-float-duration="0.8"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">P</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">C</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span></span></h2>
+            <div class="hero-card__count">34 Products</div>
+            <p class="hero-card__desc">Post-consumer waste transformed into enduring beauty. Each piece carries the story of material reborn — proving sustainability and design are one.</p>
+            <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="hero-card__action">Explore Collection <span class="hero-card__action-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 — Nature -->
+      <div class="hero-card card-4" data-collection="nature" style="transform: translateZ(0px) scale(0.925); z-index: 4; opacity: 0.95; filter: blur(0.5px);">
+        <div class="hero-card__inner">
+          <div class="hero-card__visual">
+            <div class="hero-card__visual-img">
+              <div class="hero-card__pattern"></div>
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><path d="M60 15 Q80 40 60 60 Q40 80 60 105" stroke="#5A9E88" stroke-width="3" fill="none"></path><path d="M60 15 Q40 40 60 60 Q80 80 60 105" stroke="#5A9E88" stroke-width="3" fill="none"></path><circle cx="60" cy="60" r="6" fill="#5A9E88"></circle></svg>
+            </div>
+            <div class="hero-card__index">04</div>
+          </div>
+          <div class="hero-card__content">
+            <span class="hero-card__tag">Nature</span>
+            <h2 class="hero-card__name scroll-float" data-float-ease="power3.out" data-float-stagger="0.02" data-float-start="top bottom-=5%" data-float-end="bottom center" data-float-duration="0.8"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">N</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">u</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">C</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span></span></h2>
+            <div class="hero-card__count">51 Products</div>
+            <p class="hero-card__desc">Furniture that belongs to the forest as much as the city. Organic forms that blend into parks, trails, and gardens — designed to weather with grace.</p>
+            <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="hero-card__action">Explore Collection <span class="hero-card__action-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 — Details -->
+      <div class="hero-card card-5" data-collection="details" style="transform: translateZ(0px) scale(1.04); z-index: 6; opacity: 0.35;">
+        <div class="hero-card__inner">
+          <div class="hero-card__visual">
+            <div class="hero-card__visual-img">
+              <div class="hero-card__pattern"></div>
+              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25"><rect x="35" y="25" width="50" height="70" rx="6" fill="none" stroke="#B87A68" stroke-width="3"></rect><rect x="40" y="30" width="16" height="16" rx="2" fill="#B87A68" opacity="0.6"></rect><rect x="62" y="30" width="16" height="16" rx="2" fill="#B87A68" opacity="0.4"></rect><rect x="40" y="52" width="38" height="4" rx="2" fill="#B87A68" opacity="0.3"></rect><rect x="40" y="62" width="30" height="4" rx="2" fill="#B87A68" opacity="0.2"></rect></svg>
+            </div>
+            <div class="hero-card__index">05</div>
+          </div>
+          <div class="hero-card__content">
+            <span class="hero-card__tag">Details</span>
+            <h2 class="hero-card__name scroll-float" data-float-ease="power3.out" data-float-stagger="0.02" data-float-start="top bottom-=5%" data-float-end="bottom center" data-float-duration="0.8"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">D</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">C</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span></span></h2>
+            <div class="hero-card__count">55 Products</div>
+            <p class="hero-card__desc">The small things that make a place feel whole. Signage, bollards, and accessories finished with the same reverence we give our largest pieces.</p>
+            <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#" class="hero-card__action">Explore Collection <span class="hero-card__action-arrow">→</span></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="hero-stack__end"></div>
+</section>
+
+<!-- Products -->
+<section class="products" id="products">
+  <div class="section__inner">
+    <p class="section__label reveal visible">Featured Products</p>
+    <h2 class="section__title scroll-float" data-float-ease="power3.out" data-float-stagger="0.025" data-float-start="top bottom-=10%" data-float-end="bottom center" data-float-duration="0.9"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">D</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">g</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">d</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">d</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">u</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">.</span><br><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">B</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">u</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">.</span></span></h2>
+  </div>
+  <div class="products__grid">
+    <div class="product-item reveal reveal-delay-1 visible">
+      <div class="product-item__bg pb-1"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Serra Bench</div>
+        <div class="product-item__cat">Urban Collection</div>
+      </div>
+    </div>
+    <div class="product-item reveal reveal-delay-1 visible">
+      <div class="product-item__bg pb-2"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Terra Planter</div>
+        <div class="product-item__cat">Nature Collection</div>
+      </div>
+    </div>
+    <div class="product-item reveal reveal-delay-2 visible">
+      <div class="product-item__bg pb-3"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Borea Table</div>
+        <div class="product-item__cat">Details Collection</div>
+      </div>
+    </div>
+    <div class="product-item reveal reveal-delay-2 visible">
+      <div class="product-item__bg pb-4"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Maré Litter Bin</div>
+        <div class="product-item__cat">rePlastic Collection</div>
+      </div>
+    </div>
+    <div class="product-item reveal reveal-delay-3 visible">
+      <div class="product-item__bg pb-5"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Verde Bollard</div>
+        <div class="product-item__cat">Golf Collection</div>
+      </div>
+    </div>
+    <div class="product-item reveal reveal-delay-3 visible">
+      <div class="product-item__bg pb-6"></div>
+      <div class="product-item__info">
+        <div class="product-item__name">Lumia Lighting</div>
+        <div class="product-item__cat">Urban Collection</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brand / About -->
+<section class="brand" id="brand">
+  <div class="brand__inner">
+    <div class="brand__grid">
+      <div class="brand__visual reveal visible">
+        <div class="brand__visual-inner" style="transform: translateY(2.6175px);">F</div>
+      </div>
+      <div class="brand__content">
+        <p class="section__label reveal visible">About Floema</p>
+        <h2 class="section__title scroll-float" data-float-ease="power3.out" data-float-stagger="0.025" data-float-start="top bottom-=10%" data-float-end="bottom center" data-float-duration="0.9"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">R</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">d</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">u</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">.</span><br><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">D</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">g</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">d</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">f</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">r</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">p</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0px, 0px); opacity: 1;">.</span></span></h2>
+        <p class="reveal reveal-delay-1 visible">Floema is the living fabric of a company born in the heart of Portugal. We design signage, furniture, and equipment — not as isolated objects, but as extensions of the landscapes they inhabit.</p>
+        <p class="reveal reveal-delay-2 visible">Every product carries the intention of permanence. Materials are chosen for how they age, how they weather, how they become part of a place over time. This is design that lives alongside you — through every season, every use, every year.</p>
+        <div class="brand__stats reveal reveal-delay-3 visible">
+          <div><span class="brand__stat">230<small>+</small></span><span class="brand__stat-label">Products</span></div>
+          <div><span class="brand__stat">12</span><span class="brand__stat-label">Countries</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sustainability -->
+<section class="sustainability" id="sustainability">
+  <div class="sustainability__inner">
+    <p class="section__label reveal visible">Sustainability</p>
+    <h2 class="section__title scroll-float" data-float-ease="power3.out" data-float-stagger="0.025" data-float-start="top bottom-=10%" data-float-end="bottom center" data-float-duration="0.9"><span class="scroll-float-text"><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">S</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">u</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">b</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">y</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">c</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">m</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">s</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">—</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">&nbsp;</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">e</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">t</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">i</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">o</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">n</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">a</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">l</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">y</span><span class="char" style="display: inline-block; translate: none; rotate: none; scale: none; transform-origin: 50% 0%; transform: translate(0%, 120%) scale(0.7, 2.3); opacity: 0;">.</span></span></h2>
+    <p class="section__text reveal reveal-delay-1 visible">Floema is already defined by its materials and reverence for nature. Important, yes — but contained, not used as a loud marketing weapon.</p>
+    <div class="sustainability__blocks">
+      <div class="sustainability__block reveal reveal-delay-1 visible">
+        <div class="sustainability__block-icon">♻</div>
+        <h3>Recycled Materials</h3>
+        <p>Our rePlastic collection transforms post-consumer waste into durable, beautiful products engineered for decades of use.</p>
+      </div>
+      <div class="sustainability__block reveal reveal-delay-2 visible">
+        <div class="sustainability__block-icon">🌿</div>
+        <h3>Local Production</h3>
+        <p>Every piece is manufactured in central Portugal, minimizing transport footprint while supporting traditional craftsmanship.</p>
+      </div>
+      <div class="sustainability__block reveal reveal-delay-3 visible">
+        <div class="sustainability__block-icon">⏳</div>
+        <h3>Built to Last</h3>
+        <p>We design for permanence. Materials are chosen for how they age gracefully — developing patina rather than degrading.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer" id="contact">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div>
+        <div class="footer__logo">Floema<sup>®</sup></div>
+        <p>Spaces for people, made for life. Designing and producing sustainable urban furniture since 2005.</p>
+      </div>
+      <div>
+        <h4>Collections</h4>
+        <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Urban</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Golf</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">rePlastic</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Nature</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Details</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">About</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Sustainability</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Catalogues</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Contact</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">hello@floema.com</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">+351 239 000 000</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Condeixa-a-Velha</a><a href="file:///C:/Users/jys/AppData/Local/Claude-3p/local-agent-mode-sessions/08328559/00000000/local_89093cde-1075-4b4d-bb32-a2163e8174cc/outputs/floema.html#">Portugal</a>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2025 Floema Lda. All rights reserved.</span>
+      <span>Built in Portugal. Made for life.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Register GSAP ScrollTrigger ──────────
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ═══════════ ScrollFloat Engine ═══════════
+  function initScrollFloat() {
+    const containers = document.querySelectorAll('.scroll-float');
+
+    containers.forEach(container => {
+      // Parse data attributes with defaults
+      const ease = container.dataset.floatEase || 'back.inOut(2)';
+      const stagger = parseFloat(container.dataset.floatStagger) || 0.03;
+      const start = container.dataset.floatStart || 'center bottom+=50%';
+      const end = container.dataset.floatEnd || 'bottom bottom-=40%';
+      const duration = parseFloat(container.dataset.floatDuration) || 1;
+
+      // Get the text content, preserving inline elements like <br> and <em>
+      function splitTextNodes(node, chars) {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent;
+          const frag = document.createDocumentFragment();
+          for (let i = 0; i < text.length; i++) {
+            const span = document.createElement('span');
+            span.className = 'char';
+            span.textContent = text[i] === ' ' ? ' ' : text[i];
+            span.style.display = 'inline-block';
+            frag.appendChild(span);
+            chars.push(span);
+          }
+          return frag;
+        }
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          if (node.tagName === 'BR') {
+            const frag = document.createDocumentFragment();
+            frag.appendChild(document.createElement('br'));
+            return frag;
+          }
+          const frag = document.createDocumentFragment();
+          const wrapper = document.createElement('span');
+          // Copy inline styles for em, strong, etc.
+          wrapper.style.cssText = window.getComputedStyle(node).cssText;
+          for (const child of Array.from(node.childNodes)) {
+            wrapper.appendChild(splitTextNodes(child, chars));
+          }
+          frag.appendChild(wrapper);
+          return frag;
+        }
+        return node.cloneNode(true);
+      }
+
+      const chars = [];
+      const newContent = document.createDocumentFragment();
+      for (const child of Array.from(container.childNodes)) {
+        newContent.appendChild(splitTextNodes(child, chars));
+      }
+
+      // Only animate if we have chars
+      if (chars.length === 0) return;
+
+      // Replace content
+      container.innerHTML = '';
+      container.appendChild(newContent);
+
+      // Wrap in scroll-float-text span for styling
+      const wrapper = document.createElement('span');
+      wrapper.className = 'scroll-float-text';
+      while (container.firstChild) {
+        wrapper.appendChild(container.firstChild);
+      }
+      container.appendChild(wrapper);
+
+      // Re-query chars after DOM mutation
+      const charElements = container.querySelectorAll('.char');
+
+      // Set initial state
+      gsap.set(charElements, {
+        opacity: 0,
+        yPercent: 120,
+        scaleY: 2.3,
+        scaleX: 0.7,
+        transformOrigin: '50% 0%'
+      });
+
+      // Animate with ScrollTrigger
+      gsap.to(charElements, {
+        duration: duration,
+        ease: ease,
+        opacity: 1,
+        yPercent: 0,
+        scaleY: 1,
+        scaleX: 1,
+        stagger: stagger,
+        scrollTrigger: {
+          trigger: container,
+          start: start,
+          end: end,
+          scrub: true
+        }
+      });
+    });
+  }
+
+  // Run after fonts and layout settle
+  window.addEventListener('load', () => {
+    setTimeout(initScrollFloat, 200);
+  });
+
+  // ═══════════ OGL Particles ═══════════
+  initHeroParticles();
+
+  function initHeroParticles() {
+    const container = document.getElementById('heroParticles');
+    if (!container || typeof OGL === 'undefined') return;
+
+    const { Renderer, Camera, Geometry, Program, Mesh } = OGL;
+
+    const hexToRgb = (hex) => {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const int = parseInt(hex, 16);
+      return [(int >> 16 & 255) / 255, (int >> 8 & 255) / 255, (int & 255) / 255];
+    };
+
+    const vertex = /* glsl */ `
+      attribute vec3 position;
+      attribute vec4 random;
+      attribute vec3 color;
+      uniform mat4 modelMatrix;
+      uniform mat4 viewMatrix;
+      uniform mat4 projectionMatrix;
+      uniform float uTime;
+      uniform float uSpread;
+      uniform float uBaseSize;
+      uniform float uSizeRandomness;
+      varying vec4 vRandom;
+      varying vec3 vColor;
+      void main() {
+        vRandom = random;
+        vColor = color;
+        vec3 pos = position * uSpread;
+        pos.z *= 10.0;
+        vec4 mPos = modelMatrix * vec4(pos, 1.0);
+        float t = uTime;
+        mPos.x += sin(t * random.z + 6.28 * random.w) * mix(0.1, 1.5, random.x);
+        mPos.y += sin(t * random.y + 6.28 * random.x) * mix(0.1, 1.5, random.w);
+        mPos.z += sin(t * random.w + 6.28 * random.y) * mix(0.1, 1.5, random.z);
+        vec4 mvPos = viewMatrix * mPos;
+        if (uSizeRandomness == 0.0) {
+          gl_PointSize = uBaseSize;
+        } else {
+          gl_PointSize = (uBaseSize * (1.0 + uSizeRandomness * (random.x - 0.5))) / length(mvPos.xyz);
+        }
+        gl_Position = projectionMatrix * mvPos;
+      }
+    `;
+
+    const fragment = /* glsl */ `
+      precision highp float;
+      uniform float uTime;
+      uniform float uAlphaParticles;
+      varying vec4 vRandom;
+      varying vec3 vColor;
+      void main() {
+        vec2 uv = gl_PointCoord.xy;
+        float d = length(uv - vec2(0.5));
+        float circle = smoothstep(0.5, 0.4, d);
+        gl_FragColor = vec4(vColor + 0.2 * sin(uv.yxx + uTime + vRandom.y * 6.28), circle);
+      }
+    `;
+
+    const renderer = new Renderer({ dpr: 1, depth: false, alpha: true });
+    const gl = renderer.gl;
+    container.appendChild(gl.canvas);
+    gl.clearColor(0, 0, 0, 0);
+
+    const camera = new Camera(gl, { fov: 15 });
+    camera.position.set(0, 0, 20);
+
+    function resize() {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      renderer.setSize(w, h);
+      camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Warm gold / cream / sage palette matching yellow bg
+    const palette = ['#F8D4DC', '#FDDDE5', '#F5C6D0', '#FCE4EC', '#F8C8D4', '#FDD5E0', '#F4C2D0', '#FADBE2'];
+    const count = 250;
+    const positions = new Float32Array(count * 3);
+    const randoms = new Float32Array(count * 4);
+    const colors = new Float32Array(count * 3);
+
+    for (let i = 0; i < count; i++) {
+      let x, y, z, len;
+      do {
+        x = Math.random() * 2 - 1;
+        y = Math.random() * 2 - 1;
+        z = Math.random() * 2 - 1;
+        len = x * x + y * y + z * z;
+      } while (len > 1 || len === 0);
+      const r = Math.cbrt(Math.random());
+      positions.set([x * r, y * r, z * r], i * 3);
+      randoms.set([Math.random(), Math.random(), Math.random(), Math.random()], i * 4);
+      const col = hexToRgb(palette[Math.floor(Math.random() * palette.length)]);
+      colors.set(col, i * 3);
+    }
+
+    const geometry = new Geometry(gl, {
+      position: { size: 3, data: positions },
+      random: { size: 4, data: randoms },
+      color: { size: 3, data: colors }
+    });
+
+    const program = new Program(gl, {
+      vertex,
+      fragment,
+      uniforms: {
+        uTime: { value: 0 },
+        uSpread: { value: 10 },
+        uBaseSize: { value: 100 },
+        uSizeRandomness: { value: 1 },
+        uAlphaParticles: { value: 1 }
+      },
+      transparent: true,
+      depthTest: false
+    });
+
+    const particles = new Mesh(gl, { mode: gl.POINTS, geometry, program });
+
+    let lastTime = performance.now();
+    let elapsed = 0;
+
+    function update(t) {
+      requestAnimationFrame(update);
+      const delta = t - lastTime;
+      lastTime = t;
+      elapsed += delta * 0.08;
+
+      program.uniforms.uTime.value = elapsed * 0.001;
+
+      // Gentle drift on scroll — keep subtle
+      const scrollY = window.scrollY;
+      particles.position.y = Math.sin(scrollY * 0.0006) * 0.5;
+      particles.position.x = Math.cos(scrollY * 0.0004) * 0.3;
+
+      // Slow rotation
+      particles.rotation.x = Math.sin(elapsed * 0.0002) * 0.08;
+      particles.rotation.y = Math.cos(elapsed * 0.0003) * 0.1;
+      particles.rotation.z += 0.005;
+
+      renderer.render({ scene: particles, camera });
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ── Loader ────────────────────────────────
+  const loader = document.querySelector('.loader');
+  const body = document.body;
+
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      loader.classList.add('hidden');
+      body.classList.remove('loading');
+    }, 700);
+  });
+
+  // ── Custom Cursor ────────────────────────
+  const cursor = document.getElementById('cursor');
+  let mouseX = 0, mouseY = 0;
+  let cursorX = 0, cursorY = 0;
+
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+  const hoverTargets = document.querySelectorAll('a, button, .hero-card, .product-item, .menu-toggle, .header__lang');
+  hoverTargets.forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+  document.addEventListener('mouseleave', () => cursor.classList.add('hidden'));
+  document.addEventListener('mouseenter', () => cursor.classList.remove('hidden'));
+  (function animateCursor() {
+    cursorX += (mouseX - cursorX) * 0.14;
+    cursorY += (mouseY - cursorY) * 0.14;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    requestAnimationFrame(animateCursor);
+  })();
+
+  // ── Particle Canvas ──────────────────────
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let canvasW, canvasH;
+
+  function resizeCanvas() {
+    canvasW = canvas.width = window.innerWidth;
+    canvasH = canvas.height = window.innerHeight;
+    particles.forEach(p => p.reset());
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * canvasW;
+      this.y = Math.random() * canvasH;
+      this.size = Math.random() * 2.5 + 0.8;
+      this.speedX = (Math.random() - 0.5) * 0.35;
+      this.speedY = (Math.random() - 0.5) * 0.35 - 0.2;
+      this.opacity = Math.random() * 0.18 + 0.04;
+      this.life = Math.random() * 350 + 200;
+      this.age = 0;
+    }
+    update(scrollSpeed) {
+      this.age++; this.x += this.speedX;
+      this.y += this.speedY - scrollSpeed * 0.25;
+      if (this.age > this.life || this.y < -20 || this.y > canvasH + 20 || this.x < -20 || this.x > canvasW + 20) {
+        this.reset(); this.y = canvasH + 20;
+      }
+    }
+    draw(ctx) {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(186, 207, 163, ${this.opacity})`; ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 50; i++) particles.push(new Particle());
+  let lastScrollY = 0, scrollSpeed = 0;
+
+  function animateParticles() {
+    ctx.clearRect(0, 0, canvasW, canvasH);
+    scrollSpeed = (window.scrollY - lastScrollY) * 0.08;
+    lastScrollY = window.scrollY;
+    particles.forEach(p => { p.update(scrollSpeed); p.draw(ctx); });
+    requestAnimationFrame(animateParticles);
+  }
+  animateParticles();
+
+  // ── Header scroll ────────────────────────
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Scroll reveal ────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: null, rootMargin: '0px 0px -60px 0px', threshold: 0.1 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ── Mobile menu ──────────────────────────
+  const menuToggle = document.getElementById('menuToggle');
+  const navOverlay = document.getElementById('navOverlay');
+  const navLinks = navOverlay.querySelectorAll('a');
+
+  menuToggle.addEventListener('click', () => {
+    navOverlay.classList.toggle('active');
+    const spans = menuToggle.querySelectorAll('span');
+    if (navOverlay.classList.contains('active')) {
+      spans[0].style.transform = 'translateY(7px) rotate(45deg)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+    } else { spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = ''; }
+  });
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      navOverlay.classList.remove('active');
+      const s = menuToggle.querySelectorAll('span');
+      s[0].style.transform = ''; s[1].style.opacity = ''; s[2].style.transform = '';
+    });
+  });
+
+  // ── Smooth scroll ────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const p = target.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: p, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── Page transition ──────────────────────
+  const transitionOverlay = document.querySelector('.page-transition');
+  document.querySelectorAll('.hero-card').forEach(card => {
+    card.addEventListener('click', function() {
+      transitionOverlay.style.transition = 'transform 0.7s cubic-bezier(0.7, 0, 0.3, 1)';
+      transitionOverlay.style.transform = 'scaleY(1)';
+      transitionOverlay.style.transformOrigin = 'bottom';
+      setTimeout(() => {
+        transitionOverlay.style.transformOrigin = 'top';
+        transitionOverlay.style.transform = 'scaleY(0)';
+      }, 750);
+    });
+  });
+
+  // ── Parallax on brand visual ─────────────
+  const brandVisual = document.querySelector('.brand__visual-inner');
+  if (brandVisual) {
+    window.addEventListener('scroll', () => {
+      const rect = brandVisual.parentElement.getBoundingClientRect();
+      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) * 0.04;
+      brandVisual.style.transform = `translateY(${offset}px)`;
+    });
+  }
+
+  // ═══════════ ScrollStack Engine ═══════════
+  const scrollStackViewport = document.querySelector('.hero-stack__viewport');
+  const scrollStackCards = document.querySelectorAll('.hero-card');
+  const scrollStackEnd = document.querySelector('.hero-stack__end');
+
+  if (scrollStackViewport && scrollStackCards.length) {
+    const baseScale = 0.90;
+    const scaleIncrement = 0.025;
+    const blurAmount = 0.5;
+
+    function updateScrollStack() {
+      const scrollY = window.scrollY;
+      const viewportTop = scrollStackViewport.offsetTop;
+      const viewportH = scrollStackViewport.offsetHeight;
+
+      let activeIndex = -1;
+      for (let i = 0; i < scrollStackCards.length; i++) {
+        const card = scrollStackCards[i];
+        const cardTop = card.offsetTop + viewportTop;
+        if (scrollY >= cardTop - window.innerHeight * 0.16) {
+          activeIndex = i;
+        }
+      }
+
+      let stackProgress = 0;
+      if (activeIndex === scrollStackCards.length - 1) {
+        const lastCard = scrollStackCards[scrollStackCards.length - 1];
+        const lastCardTop = lastCard.offsetTop + viewportTop;
+        const endTop = scrollStackEnd ? scrollStackEnd.offsetTop + viewportTop : lastCardTop + viewportH;
+        const pinStart = lastCardTop - window.innerHeight * 0.16;
+        const pinRange = endTop - pinStart - window.innerHeight * 0.5;
+        stackProgress = pinRange > 0 ? Math.min(1, Math.max(0, (scrollY - pinStart) / pinRange)) : 0;
+      }
+
+      scrollStackCards.forEach((card, i) => {
+        const depth = Math.max(0, activeIndex - i);
+        const scale = Math.max(0.7, baseScale + depth * scaleIncrement);
+        const blur = depth > 0 ? depth * blurAmount : 0;
+
+        if (depth > 0) {
+          card.style.filter = blur > 0.1 ? `blur(${blur}px)` : '';
+          card.style.transform = `translateZ(0) scale(${scale})`;
+          card.style.zIndex = scrollStackCards.length - depth;
+          card.style.opacity = 1 - depth * 0.05;
+        } else if (depth === 0 && activeIndex >= 0) {
+          card.style.filter = '';
+          card.style.transform = 'translateZ(0) scale(1)';
+          card.style.zIndex = scrollStackCards.length + 1;
+          card.style.opacity = '1';
+
+          if (i === scrollStackCards.length - 1 && stackProgress > 0.4) {
+            const fp = (stackProgress - 0.4) / 0.6;
+            card.style.opacity = 1 - fp * 0.65;
+            card.style.transform = `translateZ(0) scale(${1 + fp * 0.04})`;
+          }
+        }
+      });
+
+      // Fade intro text based on scroll
+      const intro = document.querySelector('.hero-stack__intro');
+      if (intro) {
+        const progress = Math.min(1, scrollY / (window.innerHeight * 0.7));
+        intro.style.opacity = 1 - progress;
+        intro.style.transform = `translateY(${-progress * 40}px)`;
+        intro.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
+      }
+    }
+
+    window.addEventListener('scroll', updateScrollStack, { passive: true });
+    window.addEventListener('resize', updateScrollStack, { passive: true });
+    setTimeout(updateScrollStack, 100);
+  }
+
+})();
+</script>
+
+
+</body></html>
